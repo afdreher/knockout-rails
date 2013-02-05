@@ -79,10 +79,9 @@ ko.Validations.validators =
           ""
         separator = if minMsg and maxMsg then " but " else ""
         "should be #{minMsg}#{separator}#{maxMsg}"
-    if options.equals?
-      if val is equals then null else options.message or createMsg()
-    else  
-      if min <= val <= max then null else options.message or createMsg()
+
+    valid = if options.equals? then val is equals else min <= val <= max
+    if valid then null else options.message or createMsg()
 
   custom: (model, field, options) ->
     # Treat options as a mandatory callback
