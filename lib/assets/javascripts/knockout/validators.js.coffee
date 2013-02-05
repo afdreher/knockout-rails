@@ -61,21 +61,28 @@ ko.Validations.validators =
     val = model[field]()
     return unless val
     val = val.toString().length
-    {min, max} = options
+    {min, max, equals} = options
     min = val unless min?
     max = val unless max?
+    equals = val unless equals?
     createMsg = ->
-      minMsg = if options.min?
-        "at least #{min} characters long"
+      if options.equals?
+        "should be #{equals} characters long"
       else
-        ""
-      maxMsg = if options.max?
-        "no longer than #{max} characters"
-      else
-        ""
-      separator = if minMsg and maxMsg then " but " else ""
-      "should be #{minMsg}#{separator}#{maxMsg}"
-    if min <= val <= max then null else options.message or createMsg()
+        minMsg = if options.min?
+          "at least #{min} characters long"
+        else
+          ""
+        maxMsg = if options.max?
+          "no longer than #{max} characters"
+        else
+          ""
+        separator = if minMsg and maxMsg then " but " else ""
+        "should be #{minMsg}#{separator}#{maxMsg}"
+    if options.equals?
+      if val is equals then null else options.message or createMsg()
+    else  
+      if min <= val <= max then null else options.message or createMsg()
 
   custom: (model, field, options) ->
     # Treat options as a mandatory callback
